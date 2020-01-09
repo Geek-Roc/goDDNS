@@ -8,6 +8,7 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"math/rand"
 	"net/http"
 	"net/url"
@@ -78,21 +79,27 @@ func NewAliDNS(key, secret string) *AliDNS {
 
 // GetDomainRecords gets all the doamin records according to input subdomain key
 func (d *AliDNS) GetDomainRecords(domain, rr string) []DomainRecord {
+	log.Println("GetDomainRecords ", domain)
+
 	resp := &domainRecordsResp{}
 	parms := map[string]string{
 		"Action":     "DescribeDomainRecords",
 		"DomainName": domain,
 		"RRKeyWord":  rr,
+		"Type":       "A",
 	}
 	urlPath := d.genRequestURL(parms)
 	body, err := getHTTPBody(urlPath)
 	if err != nil {
-		fmt.Printf("GetDomainRecords error.%+v\n", err)
+		log.Printf("GetDomainRecords error.")
+		log.Println(err)
 	} else {
 		if err := json.Unmarshal(body, resp); err != nil {
-			fmt.Printf("GetDomainRecords error. %+v\n", err)
+			log.Printf("GetDomainRecords error.")
+			log.Println(err)
 			return nil
 		}
+		log.Println("GetDomainRecords ip: ", resp.DomainRecords.Record[0].Value)
 		return resp.DomainRecords.Record
 	}
 	return nil
@@ -100,6 +107,8 @@ func (d *AliDNS) GetDomainRecords(domain, rr string) []DomainRecord {
 
 // UpdateDomainRecord updates domain record
 func (d *AliDNS) UpdateDomainRecord(r DomainRecord) error {
+	log.Println("UpdateDomainRecord start ", r.Value)
+
 	parms := map[string]string{
 		"Action":   "UpdateDomainRecord",
 		"RecordId": r.RecordID,
@@ -116,7 +125,8 @@ func (d *AliDNS) UpdateDomainRecord(r DomainRecord) error {
 	}
 	_, err := getHTTPBody(urlPath)
 	if err != nil {
-		fmt.Printf("UpdateDomainRecord error.%+v\n", err)
+		log.Printf("UpdateDomainRecord error.")
+		log.Println(err)
 	}
 	return err
 }

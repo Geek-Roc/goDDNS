@@ -89,7 +89,7 @@ func (d *Dnspod) GetDomain(name string) int {
 	}
 
 	if err := json.Unmarshal(body, resp); err != nil {
-		log.Printf("GetDomainRecords error.")
+		log.Println("GetDomainRecords error.")
 		log.Println(err)
 		return -1
 	}
@@ -123,7 +123,7 @@ func (d *Dnspod) GetSubDomain(domainID int, name string) (string, string) {
 	}
 
 	if err := json.Unmarshal(body, resp); err != nil {
-		log.Printf("GetSubDomain error")
+		log.Println("GetSubDomain error")
 		log.Println(err)
 		return "", ""
 	}
@@ -157,7 +157,7 @@ func (d *Dnspod) UpdateIP(domainID int, subDomainID string, subDomainName string
 
 	resp := &updateRecords{}
 	if err := json.Unmarshal(body, resp); err != nil {
-		log.Printf("UpdateIP error")
+		log.Println("UpdateIP error")
 		log.Println(err)
 	}
 

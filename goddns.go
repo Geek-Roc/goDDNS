@@ -36,6 +36,7 @@ func aliyunDDNS(w http.ResponseWriter, r *http.Request) {
 			fmt.Fprintf(w, "1")
 		}
 	} else {
+		log.Println("Do not need update")
 		fmt.Fprintf(w, "1")
 	}
 }
